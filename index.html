@@ -1,0 +1,278 @@
+<html>
+<meta charset="utf-8">
+
+<head>
+	<style>
+		.c {
+			width: 1000px;
+			height: 800px;
+			margin: 10px auto;
+			border: 1px solid #BBBBBB;
+			border-radius: 15px;
+		}
+
+		body {
+			margin: 0 auto;
+			width: 1800px;
+			display: flex;
+			justify-content: space-around;
+			flex-wrap: wrap;
+			font-family: Fira Code, monospace;
+			font-size: 14px;
+		}
+
+		.title {
+			width: 100%;
+			height: 50px;
+			text-align: center;
+			font-size: 25px;
+			line-height: 50px;
+		}
+		.load{
+			width: 100%;
+			text-align: center;
+		}
+		.nodesBox{
+			width: 730px;
+			height: 800px;
+			overflow-y: scroll;
+			padding: 10px;
+			background-color: #f7f7f7;
+			box-shadow: inset 0 0 10px 0px #00000011;
+			border-radius: 10px;
+			margin: 30px auto;
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-around;
+			align-items: center;
+		}
+		.nodes{
+			width: 45%;
+			margin: 5px;
+			border-radius: 5px;
+			box-shadow: 0 0 10px 0px #00000011;
+			background-color: white;
+			padding: 10px 5px;
+		}
+		.nodesTitle{
+			display: flex;
+		}
+		.nodesTitle div{
+			width: fit-content;
+			line-height: 20px;
+			margin: 0 5px;
+		}
+		.nodesEqu{
+			width: fit-content;
+			min-width: 100%;
+			font-size: 20px;
+			display: flex;
+			justify-content: center;
+		}
+		.nodesLink{
+			width: fit-content;
+		}
+		.bg1, .bg2{
+			padding: 0 5px;
+			color: white;
+			border-radius: 5px;
+		}
+		.bg1{
+			background-color: #116d11;
+		}
+		.bg2{
+			background-color: #b9510b;
+		}
+		.linkTarget1{
+			background-color: #155eca;
+			color: white;
+			padding: 3px 5px;
+			border-radius: 5px;
+		}
+		.linkTarget2{
+			background-color: #8b3587;
+			color: white;
+			padding: 3px 5px;
+			border-radius: 5px;
+		}
+		.linkTarget1::before{
+			content: "->";
+			background-color: #155eca;
+			color: white;
+			padding: 0px 4px;
+		}
+		.linkTarget2::before{
+			content: "<->";
+			background-color: #8b3587;
+			color: white;
+			padding: 0px 4px;
+		}
+	</style>
+
+	<script id="MathJax-script" async src="es5/tex-mml-svg.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+	<script>
+		MathJax = {
+			tex: {
+				inlineMath: [
+					['$', '$'],
+					['\\(', '\\)'],
+					['$$', '$$']
+				]
+			},
+			jax: ["input/TeX", "output/SVG"]
+		};
+	</script>
+</head>
+
+<body>
+	<div class="title">大气科学物理量与相关公式联系图</div>
+	<div class="load" id="load">加载中……</div>
+	<div class="c" id="fig">
+
+	</div>
+    <div class="nodesBox" id="nodesBox">
+		<div class="nodes" v-for="node in nodes">
+			<div class="nodesTitle">{{node.label}}</div>
+			<div class="nodesEqu">{{node.latex}}</div>
+			<div class="nodesLink">
+				<span class="bg1">{{node.id}}</div>
+				<span class="linkTarget1" v-for="t in node.to">{{t}}</span>
+			</div>
+		</div>
+
+    </div>
+	<script src="g6.min.js"></script>
+	<script src="jquery-3.3.1.min.js"></script>
+	<script>
+		const height = 20;
+		var edgeColor = "#47a4e3";
+		var nodesList = new Vue({
+			el: '#nodesBox',
+			data:{
+				nodes:[]
+			}
+		})
+
+		// 处理数据为节点
+		function createData(oriData) {
+			var data = {
+				nodes: [],
+				edges: []
+			}
+			for (var i = 0; i < oriData.length; i++) {
+				var tex = oriData[i].latex;
+				var svg = MathJax.tex2svg(tex);
+
+				var svgWidth = parseFloat(svg.childNodes[0].getAttribute("width").slice(0, -2));
+				var svgHeight = parseFloat(svg.childNodes[0].getAttribute("height").slice(0, -2));
+
+				var ratio = svgWidth / svgHeight;
+
+				var svg = svg.childNodes[0]
+				var ssvg = new XMLSerializer().serializeToString(svg);
+				var base64 = "data:image/svg+xml;base64, " + window.btoa(unescape(encodeURIComponent(ssvg)));
+				data.nodes.push({
+					id: oriData[i].id,
+					label: oriData[i].label,
+					type: 'image',
+					img: base64,
+					size: [height * ratio * oriData[i].size, height * oriData[i].size],
+					style: {
+						fill: '#888888'
+					}
+				})
+				var edge = [];
+				if (oriData[i].to != undefined){
+					for (var j=0; j<oriData[i].to.length; j++){
+						data.edges.push({
+							source: oriData[i].id,
+							target: oriData[i].to[j],
+							style: {
+								stroke: edgeColor,
+								endArrow: {
+									path: G6.Arrow.triangle(10, 10, 10),
+									d: 10,
+									fill: edgeColor
+								}
+							}
+						})
+					}
+				}
+				if (oriData[i].to2 != undefined){
+					for (var j=0; j<oriData[i].to2.length; j++){
+						data.edges.push({
+							source: oriData[i].id,
+							target: oriData[i].to2[j],
+							style: {
+								stroke: edgeColor,
+								endArrow: {
+									path: G6.Arrow.triangle(10, 10, 10),
+									d: 10,
+									fill: edgeColor
+								},
+								startArrow: {
+									path: G6.Arrow.triangle(10, 10, 10),
+									d: 10,
+									fill: edgeColor
+								}
+							}
+						})
+					}
+				}
+			}
+            return data;
+		}
+
+
+		// ---------加载完成----------
+		window.onload = function () {
+			document.getElementById("load").innerText = "Loaded1";
+			// 创建 G6 图实例
+			const graph = new G6.Graph({
+				container: 'fig', // 指定图画布的容器 id，与第 9 行的容器对应
+				// 画布宽高
+				width: 1000,
+				height: 800,
+				animate: true,
+				layout: {
+					type: 'gForce',
+					prevenOverlap: true,
+					linkDistance: 200,
+					minMovement: 0.1,
+					maxIteration: 1000,
+					// gpuEnabled: true
+				},
+				modes: {
+					default: ['drag-canvas', 'zoom-canvas', 'drag-node'], // 允许拖拽画布、放缩画布、拖拽节点
+				},
+			});
+			// 读取数据
+			setTimeout(function () {
+				//document.getElementById("load").innerText = "run";
+				$("#load").text("run");
+				$.ajax({
+					url: "data.json",
+					type: "GET",
+					dataType: "json",
+					success: function(oriData){
+						document.getElementById("load").innerText = "loaded";
+						nodesList.nodes = oriData;
+						var data = createData(oriData);
+						graph.data(data);
+						graph.render();
+						// printNodes(oriData);
+					},
+					error: function(err,sta,emg){
+						document.getElementById("load").innerText = emg;
+					}
+				})
+			}, 500);
+		}
+	</script>
+</body>
+
+</html>
+
+
+

@@ -1,0 +1,122 @@
+[
+	{
+		"id": "p",
+		"latex": "p",
+		"label": "气压",
+		"size": 1,
+		"to": [],
+		"to2": ["idealGasEqu"]
+	},
+	{
+		"id": "T",
+		"latex": "T",
+		"label": "气温",
+		"size": 1,
+		"to": [],
+		"to2": ["idealGasEqu"]
+	},
+	{
+		"id": "rho",
+		"latex": "\\rho",
+		"label": "密度",
+		"size": 1,
+		"to": [],
+		"to2": ["idealGasEqu"]
+	},
+	{
+		"id": "R",
+		"latex": "R=R_d(1+0.608q)",
+		"label": "湿空气比气体常数",
+		"size": 1,
+		"to": ["idealGasEqu"],
+		"to2": []
+	},
+	{
+		"id": "Rd",
+		"latex": "R_d",
+		"label": "干空气比气体常数",
+		"size": 1,
+		"to":["R"],
+		"to2": []
+	},
+	{
+		"id": "q",
+		"latex": "q",
+		"label": "比湿",
+		"size": 1,
+		"to":["R"],
+		"to2": []
+	},
+	{
+		"id": "idealGasEqu",
+		"latex": "p=\\rho RT",
+		"label": "理想气体方程",
+		"size": 1.5,
+		"to2": [],
+		"to": []
+	},
+	{
+		"id": "idealGasPresEqu",
+		"latex": "p=\\frac{1}{3}\\rho\\overline{v_m^2}",
+		"label": "理想气体压强公式",
+		"size": 2.5,
+		"to": ["p"],
+		"to2": []
+	},
+	{
+		"id": "GasV",
+		"latex": "\\overline{v_m^2}",
+		"label": "气体分子平均速度",
+		"size": 2,
+		"to": ["idealGasPresEqu"],
+		"to2": []
+	},
+	{
+		"id": "nabla",
+		"latex": "\\nabla=\\frac{\\partial}{\\partial x}\\vec{i}+\\frac{\\partial}{\\partial y}\\vec{j}",
+		"label": "矢量微分算子",
+		"size": 2,
+		"to": ["moveEqu"],
+		"to2": []
+	},
+	{
+		"id": "moveEqu",
+		"latex": "\\frac{d}{dt} = \\frac{\\partial}{\\partial t}+\\nabla\\cdot\\overrightarrow{V}",
+		"label": "导数关系式",
+		"size": 2.5,
+		"to2": [],
+		"to": []
+	},
+	{
+		"id": "keshili",
+		"latex": "-2\\overrightarrow{\\Omega}\\times\\overrightarrow{V}",
+		"label": "科氏力",
+		"size": 1,
+		"to": ["f"],
+		"to2": []
+	},
+	{
+		"id": "f",
+		"latex": "f=2\\Omega\\sin\\varphi",
+		"label": "地转参数",
+		"size": 1,
+		"to2": [],
+		"to": []
+	},
+	{
+		"id": "Omega",
+		"latex": "\\Omega",
+		"label": "地转速度",
+		"size": 1,
+		"to": ["f"],
+		"to2": []
+	},
+	{
+		"id": "latitude",
+		"latex": "\\varphi",
+		"label": "纬度",
+		"size": 1,
+		"to": ["f"],
+		"to2": []
+	}
+]
