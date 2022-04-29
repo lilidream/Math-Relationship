@@ -37,25 +37,31 @@
 			height: 800px;
 			overflow-y: scroll;
 			padding: 10px;
-			background-color: #f7f7f7;
+			background-color: #f5f5f5;
 			box-shadow: inset 0 0 10px 0px #00000011;
 			border-radius: 10px;
 			margin: 30px auto;
 			display: flex;
 			flex-wrap: wrap;
-			justify-content: space-around;
+			justify-content: space-between;
+			align-content: flex-start;
 			align-items: center;
+			position: relative;
 		}
 		.nodes{
-			width: 45%;
+			width: fit-content;
 			margin: 5px;
 			border-radius: 5px;
-			box-shadow: 0 0 10px 0px #00000011;
+			box-shadow: 0 0 15px 0px #0000001a;
 			background-color: white;
-			padding: 10px 5px;
+			overflow: hidden;
+			max-width: 70%;
 		}
 		.nodesTitle{
 			display: flex;
+			justify-content: baseline;
+			background-color:#bbd3bb;
+			border-radius: 5px 5px 0 0;
 		}
 		.nodesTitle div{
 			width: fit-content;
@@ -68,49 +74,164 @@
 			font-size: 20px;
 			display: flex;
 			justify-content: center;
+			max-height: 40px;
+			margin: 5px 0;
 		}
 		.nodesLink{
-			width: fit-content;
+			width: 100%;
+			display: flex;
+			justify-content: baseline;
+			flex-direction: column;
 		}
-		.bg1, .bg2{
+		.nodeId{
 			padding: 0 5px;
 			color: white;
-			border-radius: 5px;
+			border-radius: 5px 0 0 0;
+			line-height: 22px;
 		}
-		.bg1{
-			background-color: #116d11;
+		.nodeLabel{
+			border-radius: 0 5px 0 0;
+			padding: 0 5px;
 		}
-		.bg2{
-			background-color: #b9510b;
+		.nodeId{
+			background-color: #77a577;
 		}
-		.linkTarget1{
+		.toType1, .toType2, .toTypeFrom{
+			color: black;
+			width: 100%;
+		}
+		.toType1{
+			background-color: #c2d0e5;
+		}
+		.toType2{
+			background-color: #d1b9cf;
+		}
+		.toTypeFrom{
+			background-color: #dbbfa8;
+		}
+		.toType1 span, .toType2 span, .toTypeFrom span{
+			padding: 0 3px ;
+		}
+		.toType1 div, .toType2 div, .toTypeFrom div{
+			content: "";
+			display: inline-block;
+			height: 20px;
+			width: 20px;
+			color: white;
+			vertical-align: bottom;
+		}
+		.toType1 div{
 			background-color: #155eca;
-			color: white;
-			padding: 3px 5px;
-			border-radius: 5px;
+			background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgc3R5bGU9J2ZpbGw6I2ZmZmZmZic+PGcgZGF0YS1uYW1lPSJMYXllciAyIj48ZyBkYXRhLW5hbWU9ImFycm93LWZvcndhcmQiPjxyZWN0IHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdHJhbnNmb3JtPSJyb3RhdGUoLTkwIDEyIDEyKSIgb3BhY2l0eT0iMCIvPjxwYXRoIGQ9Ik01IDEzaDExLjg2bC0zLjYzIDQuMzZhMSAxIDAgMCAwIDEuNTQgMS4yOGw1LTZhMS4xOSAxLjE5IDAgMCAwIC4wOS0uMTVjMC0uMDUuMDUtLjA4LjA3LS4xM0ExIDEgMCAwIDAgMjAgMTJhMSAxIDAgMCAwLS4wNy0uMzZjMC0uMDUtLjA1LS4wOC0uMDctLjEzYTEuMTkgMS4xOSAwIDAgMC0uMDktLjE1bC01LTZBMSAxIDAgMCAwIDE0IDVhMSAxIDAgMCAwLS42NC4yMyAxIDEgMCAwIDAtLjEzIDEuNDFMMTYuODYgMTFINWExIDEgMCAwIDAgMCAyeiIvPjwvZz48L2c+PC9zdmc+");
+
 		}
-		.linkTarget2{
+		.toType2 div{
 			background-color: #8b3587;
-			color: white;
-			padding: 3px 5px;
+			background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgc3R5bGU9J2ZpbGw6I2ZmZmZmZic+PGcgZGF0YS1uYW1lPSJMYXllciAyIj48ZyBkYXRhLW5hbWU9InN3YXAiPjxyZWN0IHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdHJhbnNmb3JtPSJyb3RhdGUoLTkwIDEyIDEyKSIgb3BhY2l0eT0iMCIvPjxwYXRoIGQ9Ik00IDloMTNsLTEuNiAxLjJhMSAxIDAgMCAwLS4yIDEuNCAxIDEgMCAwIDAgLjguNCAxIDEgMCAwIDAgLjYtLjJsNC0zYTEgMSAwIDAgMCAwLTEuNTlsLTMuODYtM2ExIDEgMCAwIDAtMS4yMyAxLjU4TDE3LjA4IDdINGExIDEgMCAwIDAgMCAyeiIvPjxwYXRoIGQ9Ik0yMCAxNkg3bDEuNi0xLjJhMSAxIDAgMCAwLTEuMi0xLjZsLTQgM2ExIDEgMCAwIDAgMCAxLjU5bDMuODYgM2ExIDEgMCAwIDAgLjYxLjIxIDEgMSAwIDAgMCAuNzktLjM5IDEgMSAwIDAgMC0uMTctMS40TDYuOTIgMThIMjBhMSAxIDAgMCAwIDAtMnoiLz48L2c+PC9nPjwvc3ZnPg==");
+		}
+		.toTypeFrom div{
+			background-color: #af7240;
+			background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgc3R5bGU9J2ZpbGw6I2ZmZmZmZic+PGcgZGF0YS1uYW1lPSJMYXllciAyIj48ZyBkYXRhLW5hbWU9ImFycm93LWZvcndhcmQiPjxyZWN0IHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdHJhbnNmb3JtPSJyb3RhdGUoLTkwIDEyIDEyKSIgb3BhY2l0eT0iMCIvPjxwYXRoIGQ9Ik01IDEzaDExLjg2bC0zLjYzIDQuMzZhMSAxIDAgMCAwIDEuNTQgMS4yOGw1LTZhMS4xOSAxLjE5IDAgMCAwIC4wOS0uMTVjMC0uMDUuMDUtLjA4LjA3LS4xM0ExIDEgMCAwIDAgMjAgMTJhMSAxIDAgMCAwLS4wNy0uMzZjMC0uMDUtLjA1LS4wOC0uMDctLjEzYTEuMTkgMS4xOSAwIDAgMC0uMDktLjE1bC01LTZBMSAxIDAgMCAwIDE0IDVhMSAxIDAgMCAwLS42NC4yMyAxIDEgMCAwIDAtLjEzIDEuNDFMMTYuODYgMTFINWExIDEgMCAwIDAgMCAyeiIvPjwvZz48L2c+PC9zdmc+");
+			float: right;
+		}
+
+		.nodeBlackBg{
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			background-color: #00000071;
+			left: 0;
+			top: 0;
+		}
+		.nodeEditBox{
+			width: 580px;
+			height: 530px;
+			padding: 10px;
+			position: absolute;
+			left: calc(50% - 300px);
+			top: calc(50% - 275px);
+			background-color: white;
+			border-radius: 20px;
+		}
+		.nodeEditBox input{
+			border: none;
+			outline: none;
+			background-color: #ececec;
+			border-radius: 10px;
+			height: 30px;
+			padding: 0 5px;
+		}
+		.nodeEditBox textarea{
+			border: none;
+			outline: none;
+			background-color: #ececec;
+			border-radius: 10px;
+			padding: 5px 5px;
+			width: 90%;
+			margin: 10px 5%;
+			height: 100px;
+		}
+		.nodeEditName{
+			display: flex;
+			width: 100%;
+			justify-content: space-around;
+		}
+		.nodeEditSvg{
+			max-width: 100%;
+			max-height: 100%;
+		}
+		.nodeEditSvgBox{
+			width: 90%;
+			margin: 10px 5%;
+			border: 1px solid #BBBBBB;
+			border-radius: 10px;
+			height: 200px;
+			overflow-x: auto;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+		.nodeEditLink1{
+			background-color: #c2d0e5;
+			padding: 3px 5px ;
 			border-radius: 5px;
+			margin: 3px 5px;
 		}
-		.linkTarget1::before{
-			content: "->";
-			background-color: #155eca;
-			color: white;
-			padding: 0px 4px;
+		.nodeEditLink2{
+			background-color: #d1b9cf;
+			padding: 3px 5px ;
+			border-radius: 5px;
+			margin: 3px 5px;
 		}
-		.linkTarget2::before{
-			content: "<->";
-			background-color: #8b3587;
-			color: white;
-			padding: 0px 4px;
+		.nodeEditLink3{
+			background-color: #dbbfa8;
+			padding: 3px 5px ;
+			border-radius: 5px;
+			margin: 3px 5px;
+		}
+		.nodeEditLinkBox, .nodeEditAddBox, .nodeEditButtonBox{
+			width: 90%;
+			margin: 10px 5%;
+		}
+		.nodeEditAddBox{
+			display: flex;
+			justify-content: center;
+		}
+		.nodeEditButtonBox{
+			display: flex;
+			justify-content: space-around;
+		}
+		.nodeEditButtonBox button{
+			border: none;
+			width: 150px;
+			text-align: center;
+			height: 40px;
+			line-height: 40px;
+			border-radius: 10px;
 		}
 	</style>
 
 	<script id="MathJax-script" async src="es5/tex-mml-svg.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 	<script>
 		MathJax = {
 			tex: {
@@ -123,6 +244,11 @@
 			jax: ["input/TeX", "output/SVG"]
 		};
 	</script>
+	<script src="js/g6.min.js"></script>
+	<script src="js/jquery-3.3.1.min.js"></script>
+	<script src="js/main.js"></script>
+	<!-- <script src="js/vue.global.js"></script> -->
+	<script src="https://unpkg.com/vue@next"></script>
 </head>
 
 <body>
@@ -132,144 +258,47 @@
 
 	</div>
     <div class="nodesBox" id="nodesBox">
-		<div class="nodes" v-for="node in nodes">
-			<div class="nodesTitle">{{node.label}}</div>
-			<div class="nodesEqu">{{node.latex}}</div>
-			<div class="nodesLink">
-				<span class="bg1">{{node.id}}</div>
-				<span class="linkTarget1" v-for="t in node.to">{{t}}</span>
+		<node-box v-for="node in nodes" v-bind:node="node" v-bind:key="node.id" @edit="nodeedit($event)"></node-box>
+
+		<div class="nodeBlackBg" v-show="showEdit">
+			<div class="nodeEditBox">
+				<div class="nodeEditName">
+					<div>id: <input type="text" v-model="nodeEdit.id"></div>
+					<div>名称: <input type="text" v-model="nodeEdit.label"></div>
+				</div>
+				<textarea type="textarea" placeholder="LATEX" v-model="nodeEdit.latex"></textarea>
+				<div class="nodeEditSvgBox">
+					<img v-bind:src="nodeEdit.base64" class="nodeEditSvg">
+				</div>
+				<div class="nodeEditLinkBox">
+					<div class="nodeEditLink">
+						单向连接：
+						<span v-for="t in nodeEdit.toType1" class="nodeEditLink1">×{{t.label}}</span>
+					</div>
+					<div class="nodeEditLink">
+						双向连接：
+						<template v-for="t in nodeEdit.toType2">
+							<span v-if="t.id in nodeEdit.toId" class="nodeEditLink2">×{{t.label}}</span>
+							<span v-else class="nodeEditLink3">{{t.label}}</span>
+						</template>
+					</div>
+				</div>
+				<div class="nodeEditAddBox">
+					添加连接：
+					<select v-model="nodeEdit.addLink1">
+						<option v-for="node in nodes" :value="node.id">{{node.label}}</option>
+					</select>
+					<button>添加为单向</button>
+					<button>添加为双向</button>
+				</div>
+				<div class="nodeEditButtonBox">
+					<button style="background-color: #e7e7e7;" @click="showEdit=false">取消</button>
+					<button style="background-color: #378137;color: white;">保存</button>
+				</div>
 			</div>
 		</div>
-
     </div>
-	<script src="g6.min.js"></script>
-	<script src="jquery-3.3.1.min.js"></script>
-	<script>
-		const height = 20;
-		var edgeColor = "#47a4e3";
-		var nodesList = new Vue({
-			el: '#nodesBox',
-			data:{
-				nodes:[]
-			}
-		})
 
-		// 处理数据为节点
-		function createData(oriData) {
-			var data = {
-				nodes: [],
-				edges: []
-			}
-			for (var i = 0; i < oriData.length; i++) {
-				var tex = oriData[i].latex;
-				var svg = MathJax.tex2svg(tex);
-
-				var svgWidth = parseFloat(svg.childNodes[0].getAttribute("width").slice(0, -2));
-				var svgHeight = parseFloat(svg.childNodes[0].getAttribute("height").slice(0, -2));
-
-				var ratio = svgWidth / svgHeight;
-
-				var svg = svg.childNodes[0]
-				var ssvg = new XMLSerializer().serializeToString(svg);
-				var base64 = "data:image/svg+xml;base64, " + window.btoa(unescape(encodeURIComponent(ssvg)));
-				data.nodes.push({
-					id: oriData[i].id,
-					label: oriData[i].label,
-					type: 'image',
-					img: base64,
-					size: [height * ratio * oriData[i].size, height * oriData[i].size],
-					style: {
-						fill: '#888888'
-					}
-				})
-				var edge = [];
-				if (oriData[i].to != undefined){
-					for (var j=0; j<oriData[i].to.length; j++){
-						data.edges.push({
-							source: oriData[i].id,
-							target: oriData[i].to[j],
-							style: {
-								stroke: edgeColor,
-								endArrow: {
-									path: G6.Arrow.triangle(10, 10, 10),
-									d: 10,
-									fill: edgeColor
-								}
-							}
-						})
-					}
-				}
-				if (oriData[i].to2 != undefined){
-					for (var j=0; j<oriData[i].to2.length; j++){
-						data.edges.push({
-							source: oriData[i].id,
-							target: oriData[i].to2[j],
-							style: {
-								stroke: edgeColor,
-								endArrow: {
-									path: G6.Arrow.triangle(10, 10, 10),
-									d: 10,
-									fill: edgeColor
-								},
-								startArrow: {
-									path: G6.Arrow.triangle(10, 10, 10),
-									d: 10,
-									fill: edgeColor
-								}
-							}
-						})
-					}
-				}
-			}
-            return data;
-		}
-
-
-		// ---------加载完成----------
-		window.onload = function () {
-			document.getElementById("load").innerText = "Loaded1";
-			// 创建 G6 图实例
-			const graph = new G6.Graph({
-				container: 'fig', // 指定图画布的容器 id，与第 9 行的容器对应
-				// 画布宽高
-				width: 1000,
-				height: 800,
-				animate: true,
-				layout: {
-					type: 'gForce',
-					prevenOverlap: true,
-					linkDistance: 200,
-					minMovement: 0.1,
-					maxIteration: 1000,
-					// gpuEnabled: true
-				},
-				modes: {
-					default: ['drag-canvas', 'zoom-canvas', 'drag-node'], // 允许拖拽画布、放缩画布、拖拽节点
-				},
-			});
-			// 读取数据
-			setTimeout(function () {
-				//document.getElementById("load").innerText = "run";
-				$("#load").text("run");
-				$.ajax({
-					url: "data.json",
-					type: "GET",
-					dataType: "json",
-					success: function(oriData){
-						document.getElementById("load").innerText = "loaded";
-						nodesList.nodes = oriData;
-						var data = createData(oriData);
-						graph.data(data);
-						graph.render();
-						// printNodes(oriData);
-					},
-					error: function(err,sta,emg){
-						document.getElementById("load").innerText = emg;
-					}
-				})
-			}, 500);
-		}
-	</script>
 </body>
 
 </html>
